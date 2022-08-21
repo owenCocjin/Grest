@@ -27,14 +27,14 @@
 ---
 
 ## Request Requirements
-#### Request Path Requirements
+### Request Path Requirements
 Because this is a REST API server, it's meant to take requests as such. The uses of request methods such as "GET", "POST", etc... Should all be used as expected (this really just comes down to how you write your apps). The most important thing to note is that the request path is **case sensitive** and follows the following syntax: ```/api/app/action```
 
 > - "api" is constant and required
 > - "app" is the name of the requested app
 > - "action" is the name of the requested action to be performed
 
-#### Form Data
+### Form Data
 All requests that contain form data **must** contain a "Content-Length" header.
 
 If a "Content-Type" header is passed and the server supports that type, it will automatically parse the data and give the results to the action.
@@ -48,7 +48,7 @@ There are currently 2 content types supported by this server:
 
 If the content type isn't specified, is unrecognized by the server, or threw an error while parsing, it will just pass the raw data to the action
 
-#### URL Arguments
+### URL Arguments
 URL arguments can be passed just like any other HTTP request. For example, if we wanted to pass the value "True" as the arg "time_only" to the app "Time/now", we can do so like this:
 ```
 curl -k 'https://localhost:8080/api/Time/now?time_only=True'
@@ -62,7 +62,7 @@ curl -k 'https://localhost:8080/api/Time/now?time_only=True&format=WWVhcjogJVkKT
 ---
 
 ## Response Info
-#### Common Values
+### Common Values
 All responses are in JSON. All responses MUST have at least all of the following:
 - status: A string with value "OK" or "Failed"
 - response: The response data. This can be the data returned for a request, or an error message.
@@ -96,7 +96,7 @@ Required by:
 
 > Note: If returning specific columns, pass a list of column names as they would appear in the table
 
-#### Basic
+### Basic
 The basic form of authentication is to pass a header with a base64 encoded ```username:password``` string:
 ```
 Authorization: Basic abcdefg
@@ -107,7 +107,7 @@ Here is the cURL command to test basic authentication with the given "DummyAuth"
 curl -k https://localhost:8080/api/DummyAuth/basic -H "Authorization: Basic YmFzaWNfdGVzdGVyOmJhczFjOnBhc3N3MHJkIQ=="
 ```
 
-#### Bearer
+### Bearer
 If your app should use a token instead, you can use the "Bearer" schema. Same as "Basic", but you pass a base64-encoded token, which will be compared against a bytes object instead of a string. This means a token can be created using bytes instead of characters.
 
 Below is the cURL command to test bearer auth with the "DummyAuth" app:
@@ -118,7 +118,7 @@ curl -k https://localhost:8080/api/DummyAuth/bearer -H "Authorization: Bearer 2R
 ---
 
 ## Creating Your Own Apps
-#### App Structures
+### App Structures
 To create your own app, the following must exist:
 - A directory under "Apps", named the same as the app.
 - A directory under the app for each supported request method (GET, POST, etc...). Make sure these are all caps
@@ -140,13 +140,13 @@ Apps
 
 All action scripts **must** have a function named "action". This is what will be run when called by a client.
 
-#### Action Args
+### Action Args
 All actions are given 3 keyword args in this order:
 1. **request_headers** _(dict)_: A dictionary of request headers. This is useful if a client is passing data such as authentication, or (for example) your app relies on user agent data
 2. **request_data** _(bytes)_: Raw form data
 3. **url_args** _(dict)_: A dictionary of given url arguments (https://localhost:8080/api/Time/now?format=abc)
 
-#### Action Returns
+### Action Returns
 All actions must return JSON data. This can either be a proper JSON string, or a dict that will be converted to JSON.
 
 The standard I'm looking to follow is for all actions to return at least the following:
@@ -161,7 +161,7 @@ There are some functions to return simple dicts that follow this standard. They 
 > Note: Both the above functions can include more items by passing them to the functions as args.
 > Ex: If I wanted to include and "extra" in the genericFailed I would call it like: genericFailed("Invalid input",extra="The client gave bad data")
 
-#### Base Actions
+### Base Actions
 **NOTE**: This has NOT been implemented yet!
 If desired, it is possible to specify a catch-all action.
 
@@ -171,7 +171,7 @@ This allows the server to follow the RESTful ideology closer, and allows a simpl
 - Set the variable ```action_as_input``` to ```True``` (see ```Apps/Time/POST/base.py``` for examples)
 - Include the argument ```base_input``` in the action function def. This is how the requested action is passed as input to the base action. It is passed as a string.
 
-#### App Isolation
+### App Isolation
 Apps are not isolated from one another. It is not explicitly simple to interact with other apps, but it can be done. One thing to keep in mind is that the working directory is NOT wherever the app resides, but is at the top level of this project.
 
 For example, the Info/apps app returns a list of all loaded apps and their actions. This is done by iterating through globe.ALL_APPS. We can simply import globe as we would normally (i.e. we don't need something like ```import ..globe```)
@@ -179,7 +179,7 @@ For example, the Info/apps app returns a list of all loaded apps and their actio
 ---
 
 ## Configurable Items
-#### Globe
+### Globe
 The ```globe.py``` file holds all configurable items. Think of it as a config file, but in Python! Any comment blocks that use triple quotes (some editors might make these blocks a different colour) are editable by you. Here are the explanations of all items in this file:
 - main.py
 	- **SERV_IP** _(str)_: The IP the server will bind to
@@ -194,7 +194,7 @@ The ```globe.py``` file holds all configurable items. Think of it as a config fi
 	- **CERT_PATH** _(str or None)_: Path to the TLS Certificate. If both CERT_PATH and KEY_PATH aren't set, server won't encrypt
 	- **KEY_PATH** _(str or None)_: Path to TLS private key. If both CERT_PATH and KEY_PATH aren't set, server won't encrypt
 
-#### Disabling Apps, Methods, and Actions
+### Disabling Apps, Methods, and Actions
 To disable apps, methods, and/or actions, create a file under the "Apps" directory named "disabled". Each line can only have one disable entry and must follow the following syntax. To disable:
 - Apps: ```app```
 - Methods: ```app.method```
@@ -204,7 +204,7 @@ To disable apps, methods, and/or actions, create a file under the "Apps" directo
 
 You can use ```#``` to comment out lines in that file.
 
-#### Redirecting Actions
+### Redirecting Actions
 If you'd like to change the name of an action without changing the Python file's name, you can implement redirects. By adding a file named ```redirect``` in the same directory as an action, you can set a different name for the action.
 There must be only one redirection per line in the ```redirect``` file.
 The syntax follows:
