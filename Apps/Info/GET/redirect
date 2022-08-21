@@ -1,0 +1,35 @@
+## This is a redirect file
+## It essentially just changes the names of actions, which can be helpful for things like obscuring action names
+## Redirect files only apply to the directory they currently sit in
+## Each redirect will be on it's own line
+## The format for a redirect:
+##   orig_action -> new_action
+## The format for an alias:
+##   orig_action + new_action
+## To generate a random name:
+## *     ; Random name
+## *5    ; Random name, 5 chars
+## *5-10 ; Random name, 5-10 chars
+## To generate a random hex name:
+## &     ; Random hex name
+## &5    ; Random hex name, 5 chars
+## &5-10 ; Random hex name, 5-10 chars
+
+
+
+#Create 3 aliases pointing to "all"
+all + example_1
+all + example_2
+all + example_3
+
+#Create aliases to rename the original actions
+all + everything
+apps + rename_apps
+
+#Rename "rename_apps" to a random string, 5 chars long
+rename_apps -> *5
+
+#Rename the "all" aliases to random hex strings of random lengths 5-10
+example_1 -> &5-10
+example_2 -> &5-10
+example_3 -> &5-10

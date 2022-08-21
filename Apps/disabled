@@ -1,0 +1,7 @@
+## This file contains all the Apps that you DO NOT want to load
+## You can use a pound symbol to comment out lines
+## Make sure no lines start with a space!
+
+#Info
+#Time.POST
+#Time.GET.now
