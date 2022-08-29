@@ -18,9 +18,9 @@ THREAD_COUNT=5
 '''----------------#
 #    clients.py    #
 #----------------'''
-SUPPORTED_METHODS=["GET","POST"]
+# SUPPORTED_METHODS=["GET","POST"]
 #The line below has more methods
-# SUPPORTED_METHODS=["GET","POST","PUT","PATCH","DELETE"]
+SUPPORTED_METHODS=["GET","POST","PUT","PATCH","DELETE"]
 
 '''---------#
 #    TLS    #

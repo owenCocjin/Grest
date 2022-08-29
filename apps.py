@@ -141,7 +141,8 @@ class Method():
 				try:
 					self._action_as_input=__import__(f"Apps.{self.app_name}.{self.method}.base",fromlist=["action_as_input"]).action_as_input
 				except AttributeError as e:
-					print(f"[|X:apps:Method]: Error getting action_as_input: {e}")
+					# print(f"[|X:apps:Method]: Error getting action_as_input: {e}")
+					pass
 
 		# print(f"[|X:apps:Method:{self.method}]: All actions: {self.actions}")
 	def __str__(self):
