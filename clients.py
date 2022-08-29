@@ -73,8 +73,48 @@ class Client(threading.Thread):
 			#If there's a "content-type" header we will parse req_data as specified in the header
 			try:
 				content_type=parsing.getFromDict_nocase("content-type",req_headers)
+
 				if content_type:
-					req_data=parsing.content_type[content_type.decode()](req_data)
+					content_type=content_type.decode().strip()
+					#Split the header by the first ';' if any, then by the first '/' which must exist
+					ctype_params_pos=content_type.find(';')
+					ctype_mime_pos=content_type.find('/')
+
+					if ctype_mime_pos==-1:
+						raise HTTPParsingError("Poorly formatted Content-Type header was given")
+
+					#Only parse params if any exist
+					if ctype_params_pos!=-1:
+						#Split params
+						ctype_params_str=content_type[ctype_params_pos+1:]
+						#Split mime
+						ctype_mime=content_type[:ctype_params_pos]
+
+						#Parse params
+						ctype_params_str=ctype_params_str.split(';')
+						ctype_params={}
+						for p in ctype_params_str:
+							p=p.strip().split('=')
+							ctype_params[p[0]]=p[1]
+					else:
+						ctype_mime=content_type
+
+					#Parse mime
+					ctype_type=ctype_mime[:ctype_mime_pos]
+					ctype_subtype=ctype_mime[ctype_mime_pos+1:]
+
+					#Try to call the mime parsing function if it exists
+					try:
+						mime_type=parsing.content_type[ctype_type][ctype_subtype]
+
+						if mime_type.takes_args:
+							req_data=mime_type(req_data,ctype_params)
+						else:
+							req_data=mime_type(req_data)
+					except KeyError:
+						raise HTTPParsingError("Couldn't parse given MIME type")
+
+					# req_data=parsing.content_type[content_type.decode()](req_data)
 			except Exception as e:
 				print(f"[|X:clients:Client]: Failed to parse the data with given content type: {e}")
 				pass
@@ -176,11 +216,13 @@ Content-Length: {len(results)}\r
 		return req_app_obj[req_method][req_action](request_headers,request_data,url_args)
 
 
-	#__--++* OKs *++--__#
-	def send_genericOK(self):
-		'''Return a generic OK message'''
-		self.cli.send(f"""{globe.HTTP_VERSION} 200 OK\r
-Content-Type: application/json\r
-Content-Length: 44\r\n\r
-{{"status":"OK","message":"Everything is OK"}}""".encode())
-		self.cli.close()
+#---------------------#
+#    Reply Classes    #
+#---------------------#
+class Reply():
+	'''This is the base class for all actions to reply with'''
+	def __init__(self,status_code,hint,data=None,headers=None):
+		self.status_code=status_code
+		self.hint=hint
+		self.data=data
+		self.headers=headers
