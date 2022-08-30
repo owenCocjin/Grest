@@ -95,56 +95,16 @@ def postFormURLDecode(d:bytes,urldecode=False):
 
 	return to_ret
 
-def postFormData(d:bytes,h:str):
-	'''Parses multipart/form-data data and returns a dict of all values found within it.
-	d is the POST data
-	h is the Content-Type header data (any data after the first ';' in the header).
-	Returns None on error'''
-	print(f"[|X:parsing:postFormData:d]: {d}")
-	print(f"[|X:parsing:postFormData:h]: {h}")
-	#Split by boundary (which should be defined in the header data)
-	if "boundary" not in h:
-		return None
-	boundary_data=d.split(f"""--{h["boundary"]}""".encode())  #Have to encode because this is all bytes data
-	print(f"[|X:parsing:postFormData:boundary_data]: {boundary_data}")
 
-	return None
 
 #-------------------------------#
 #    Content-Type Processing    #
 #-------------------------------#
-#To add more MIME types, follow the existing examples in the "content_type" variable under the classes
-class MIMEType():
-	def __init__(self,name,subtypes):
-		self.name=name
-		self.subtypes={s.name:s for s in subtypes}
+#Note: The key names MUST be the full value that the header would give (i.e. including the "application/")
+content_type["application/x-www-form-urlencoded"]=postFormURLDecode
+content_type["application/json"]=json.loads
 
-	def __getitem__(self,s):
-		return self.subtypes[s]
 
-class MIMESubtype():
-	def __init__(self,name,processing_func,takes_args=False):
-		'''name is the subtype name.
-		processing_func is the function that processes the data of this subtype.
-		takes_args if True, will allow the client to pass the Content-Type params (as a dict) to self.processing_func'''
-		self.name=name
-		self.processing_func=processing_func
-		self.takes_args=takes_args
-	def __call__(self,*args,**kwargs):
-		return self.processing_func(*args,**kwargs)
-
-#Add new MIME types here
-content_type={
-	"application":MIMEType("application",[
-		MIMESubtype("x-www-form-urlencoded",postFormURLDecode,False),
-		MIMESubtype("json",json.loads,False)
-		]
-	),
-	"multipart":MIMEType("multipart",[
-		MIMESubtype("form-data",postFormData,True)
-		]
-	)
-}
 
 
 #--------------#
