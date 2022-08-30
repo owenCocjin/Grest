@@ -1,7 +1,6 @@
 ## This file holds all authentication methods
 import re,base64,sqlite3
-import parsing
-from conn import genericOK,genericFailed
+import parsing,reply
 
 class Auth():
 	'''Specific criteria are required if using a database to authenticate.
@@ -53,14 +52,14 @@ class Auth():
 	#    Auth Functions    #
 	#----------------------#
 	def bearer(self):
-		'''Returns a generic JSON response (given by genericOK()/genericFail())
-		A genericOK indicates the authentication was successful.
+		'''Returns a generic JSON response (given by reply.Ok.JSONResponse()/reply.Failed.JSONResponse())
+		An OK indicates the authentication was successful.
 		On success, "response" in the return will be the raw data of the query, or the base64 decoded auth if applicable.
 		Note: When authenticating against a database, the client's given token is kept as a bytes object, allowing for non-ASCII tokens. This means the token type in the database MUST be "BLOB"'''
 		#Authenticate the user using the "Authorization" header
 		auth=parsing.getFromDict_nocase("authorization",self.request_headers)
 		if not auth:
-			return genericFailed("Must authenticate user first")
+			return reply.Failed.JSONResponse("Must authenticate user first")
 
 		auth=auth.strip()
 
@@ -70,7 +69,7 @@ class Auth():
 			auth=re.fullmatch(b"^Bearer\s([0-9a-zA-Z\+\/\=]{4,})$",auth)
 
 			if not auth:
-				return genericFail("Invalid auth headers format")
+				return reply.Failed.JSONResponse("Invalid auth headers format")
 
 			auth=base64.b64decode(auth.group(1))  #Use groups to retrieve just the base64 encoded data
 			print(f"[|X:parsing:Auth:bearer:auth]: {auth}")
@@ -80,23 +79,23 @@ class Auth():
 				self.return_data=self.exec(f"SELECT {self.return_cols} FROM tokens WHERE token=?",data=(auth,))
 
 				if not self.return_data:  #No username was found
-					return genericFail("Failed to authenticate with given credentials")
+					return reply.Failed.JSONResponse("Failed to authenticate with given credentials")
 
-				return genericOK(self.return_data)
+				return reply.Ok.JSONResponse(self.return_data)
 			else:
-				return genericOK(auth)
+				return reply.Ok.JSONResponse(auth)
 
-		except (UnicodeDecodeError) as e:
-			return genericFail("Failed to authenticate with given credentials",extra=str(e))
+		except (UnicodeDecodeError,base64.binascii.Error) as e:
+			return reply.Failed.JSONResponse("Failed to authenticate with given credentials",extra=str(e))
 
 	def basic(self):
-		'''Returns a generic JSON response (given by genericOK()/genericFail())
-		A genericOK indicates the authentication was successful.
+		'''Returns a generic JSON response (given by reply.Ok.JSONResponse()/reply.Failed.JSONResponse())
+		An OK indicates the authentication was successful.
 		On success, "response" in the return will be the raw data of the query, or the base64 decoded auth if applicable (user:pass).'''
 		#Authenticate the user using the "Authorization" header
 		auth=parsing.getFromDict_nocase("authorization",self.request_headers)
 		if not auth:
-			return genericFailed("Must authenticate user first")
+			return reply.Failed.JSONResponse("Must authenticate user first")
 
 		auth=auth.strip()
 
@@ -106,7 +105,7 @@ class Auth():
 			auth=re.fullmatch(b"^Basic\s([0-9a-zA-Z\+\/\=]{4,})$",auth)
 
 			if not auth:
-				return genericFail("Invalid auth headers format")
+				return reply.Failed.JSONResponse("Invalid auth headers format")
 
 			auth=base64.b64decode(auth.group(1)).decode().strip()  #Use groups to retrieve just the base64 encoded data
 			delimpos=auth.find(':')
@@ -121,11 +120,11 @@ class Auth():
 				self.return_data=self.exec(f"SELECT {self.return_cols} FROM auth WHERE username=? AND password=?",data=(username,password))
 
 				if not self.return_data:  #No username was found
-					return genericFail("Failed to authenticate with given credentials")
+					return reply.Failed.JSONResponse("Failed to authenticate with given credentials")
 
-				return genericOK(self.return_data)
+				return reply.Ok.JSONResponse(self.return_data)
 			else:
-				return genericOK(auth)
+				return reply.Ok.JSONResponse(auth)
 
 		except (UnicodeDecodeError) as e:
-			return genericFail("Failed to authenticate with given credentials",extra=str(e))
+			return reply.Failed.JSONResponse("Failed to authenticate with given credentials",extra=str(e))

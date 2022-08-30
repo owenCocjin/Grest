@@ -1,7 +1,6 @@
 ## This file holds everything related to parsing data
 import re,sqlite3,base64,json,random
-import globe
-from conn import genericOK,genericFailed
+import globe,reply
 
 content_type={}  #This will be a dict of {content-type header val: func}
 

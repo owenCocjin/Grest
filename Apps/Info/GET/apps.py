@@ -1,6 +1,6 @@
 import os
-import globe
+import globe,reply
 
 def action(*args,**kwargs):
 	'''List all apps'''
-	return {"status":"OK","response":[a for a in globe.ALL_APPS]}
+	return reply.Ok.JSONResponse([a for a in globe.ALL_APPS])
