@@ -1,6 +1,7 @@
 ## This file holds the Reply class and any subclasses
 '''To create custom reply classes, you can either add them here at the bottom, or import the "Reply" class into another file.
 See the Ok and Failed classes for examples'''
+import json
 import globe
 
 #---------------------#
@@ -57,11 +58,11 @@ class Ok(Reply):
 	'''This is a default Ok reply'''
 	@classmethod
 	def JSONResponse(cls,response="Good",**kwargs):
-		'''Convert from reason to JSON. Returns an Ok object'''
+		'''Convert from response to JSON. Returns an Ok object'''
 		to_ret={"status":"OK","response":response}
 		if kwargs:
 			to_ret.update(kwargs)
-		return cls(data=to_ret)
+		return cls(data=json.dumps(to_ret))
 
 	def __init__(self,data=None,headers=None,status_code=200,hint="OK"):
 		self.data={"status":"OK","response":"Good"} if not data else data
@@ -72,11 +73,11 @@ class Failed(Reply):
 	'''This is a default Failed reply'''
 	@classmethod
 	def JSONResponse(cls,response="Bad",**kwargs):
-		'''Convert from reason to JSON. Returns an Ok object'''
+		'''Convert from response to JSON. Returns a Failed object'''
 		to_ret={"status":"Failed","response":response}
 		if kwargs:
 			to_ret.update(kwargs)
-		return cls(data=to_ret)
+		return cls(data=json.dumps(to_ret))
 
 	def __init__(self,data=None,headers=None,status_code=500,hint="Internal Server Error"):
 		self.data={"status":"Failed","response":"Bad"} if not data else data
@@ -86,4 +87,4 @@ class Failed(Reply):
 
 
 if __name__=="__main__":
-	print(Ok.toJSON("Good job!"))
+	print(Ok.JSONResponse("Good job!"))
