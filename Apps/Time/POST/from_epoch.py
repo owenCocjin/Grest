@@ -1,5 +1,5 @@
 from datetime import datetime
-from conn import genericOK,genericFailed
+import reply
 
 def action(request_headers,request_data,url_args):
 	'''Convert the given epoch time to a date/time string.
@@ -7,7 +7,7 @@ def action(request_headers,request_data,url_args):
 
 	try:
 		epoch=float(request_data["epoch"])
-		return genericOK(datetime.fromtimestamp(epoch).strftime("%Y.%m.%d-%H:%M:%S"))
+		return reply.Ok.JSONResponse(datetime.fromtimestamp(epoch).strftime("%Y.%m.%d-%H:%M:%S"))
 
 	except Exception as e:
-		return genericFailed(f"Invalid epoch time given: {e}")
+		return reply.Failed.JSONResponse(f"Invalid epoch time given: {e}")

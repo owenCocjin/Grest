@@ -43,16 +43,3 @@ def getWindow(sock,window=b'\r\n\r\n'):
 		# print(to_ret[-(len(window)):]==window)
 
 	return to_ret
-
-def genericOK(reason="Good",**kwargs):
-	'''Return a generic OK dict, given a reason'''
-	to_ret={"status":"OK","response":reason}
-	if kwargs:
-		to_ret.update(kwargs)
-	return to_ret
-def genericFailed(reason="Bad",**kwargs):
-	'''Return a generic Failed dict, given a reason'''
-	to_ret={"status":"Failed","response":reason}
-	if kwargs:
-		to_ret.update(kwargs)
-	return to_ret

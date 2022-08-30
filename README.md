@@ -63,11 +63,13 @@ curl -k 'https://localhost:8080/api/Time/now?time_only=True&format=WWVhcjogJVkKT
 
 ## Response Info
 ### Common Values
-All responses are in JSON. All responses MUST have at least all of the following:
+Responses are expected to be returned as JSON. Most functions and classes revolve around this and will default to JSON whenever possible. All JSON responses are strongly suggested to have at least all of the following:
 - status: A string with value "OK" or "Failed"
 - response: The response data. This can be the data returned for a request, or an error message.
 
 A common value (but not required!) returned with errors is "extra", which will contain extra information about the error. Normally this will be common reasons for failures
+
+When creating your own apps, it is strongly recommended to use the reply.Reply() class and it's subclasses (See [Action Returns](#action-returns))
 
 ---
 
@@ -147,7 +149,7 @@ All actions are given 3 keyword args in this order:
 3. **url_args** _(dict)_: A dictionary of given url arguments (https://localhost:8080/api/Time/now?format=abc)
 
 ### Action Returns
-All actions must return JSON data. This can either be a proper JSON string, or a dict that will be converted to JSON.
+All actions must return Reply objects. These are provided via the ```reply``` module. Most builtin Reply objects and it's subclasses are built to return JSON data whenever possible. We will assume you are returning JSON objects from hereon out.
 
 The standard I'm looking to follow is for all actions to return at least the following:
 - status: Either "OK" or "Failed"
@@ -155,9 +157,9 @@ The standard I'm looking to follow is for all actions to return at least the fol
 
 Many errors (not all!) can return with a key "extra". This will hold additional hints as to why the error occurred.
 
-There are some functions to return simple dicts that follow this standard. They are found in the "apps.py" file and can be invoked by importing "apps" into your actions:
-	- genericOK: Given a "response" string, returns {"status":"OK","response":response}
-	- genericFailed: Given a "response" string, returns {"status":"Failed","response":response}
+There are some functions to return pre-built Reply objects that follow this standard. They are found in the "reply.py" file and can be invoked by importing "reply" into your actions:
+	- reply.Ok.JSONResponse: Given a "response" string, returns {"status":"OK","response":response}
+	- reply.Failed.JSONResponse: Given a "response" string, returns {"status":"Failed","response":response}
 > Note: Both the above functions can include more items by passing them to the functions as args.
 > Ex: If I wanted to include and "extra" in the genericFailed I would call it like: genericFailed("Invalid input",extra="The client gave bad data")
 
@@ -245,10 +247,10 @@ Check out the example in the "Info" app: ```Apps/Info/GET/redirect```
 ## To-Do
 - Allow for an interrupt signal to tell the server to refresh apps (instead of having to restart the entire server)
 - Implement dynamic action naming
-- Update ```conn.genericFailed()``` so the server doesn't return a 200 OK with it. Because it's a generic error the return status will probably just be a 500 Internal Server Error, but will still be customizable by the user
 - Enable ```multipart/form-data``` parsing
 	(Update 1): Created new method of parsing Content-Type headers. Just need to write the parsing function and it should be done!
 	(Update 2): It is splitting by boundaries, but only one file can be properly processed at a time it seems (at least when multiple files are send via cURL)
+- [Completed 2022.08.30] ~~Update ```conn.genericFailed()``` so the server doesn't return a 200 OK with it. Because it's a generic error the return status will probably just be a 500 Internal Server Error, but will still be customizable by the user~~ Now uses the Reply class solution
 - [Completed 2022.07.25] ~~Accept GET url args~~
 - [Completed 2022.08.21] ~~Implement a "base" action, where any request that doesn't match an existing action will redirect to the "base" action. See [Base Actions](#base-actions).
 	(Update 1): Having issues with getting the Method class to detect the base action~~
