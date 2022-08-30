@@ -39,6 +39,16 @@ class Reply():
 
 		return to_ret
 
+	def addHeaders(self,h):
+		'''Add a header to self.headers.
+		"h" can be a string representing the header, or a list of headers'''
+		if type(h)==list:
+			self.headers+=h
+		elif type(h)==str:
+			self.headers.append(h)
+		else:  #Throw error
+			raise TypeError("h is neither a list or string")
+
 	def getHTTPReply(self):
 		'''Just return self.__str__ if for some reason we can't just call it'''
 		return self.__str__()
