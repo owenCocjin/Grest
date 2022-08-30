@@ -208,6 +208,7 @@ You can use ```#``` to comment out lines in that file.
 If you'd like to change the name of an action without changing the Python file's name, you can implement redirects. By adding a file named ```redirect``` in the same directory as an action, you can set a different name for the action.
 There must be only one redirection per line in the ```redirect``` file.
 The syntax follows:
+
 ```
 ## Empty lines or lines starting with a '#' are ignored
 ## Note that the spaces before and after the arrow are required!
@@ -243,11 +244,14 @@ Check out the example in the "Info" app: ```Apps/Info/GET/redirect```
 
 ## To-Do
 - Allow for an interrupt signal to tell the server to refresh apps (instead of having to restart the entire server)
+- Implement dynamic action naming
+- Update ```conn.genericFailed()``` so the server doesn't return a 200 OK with it. Because it's a generic error the return status will probably just be a 500 Internal Server Error, but will still be customizable by the user
+- Enable ```multipart/form-data``` parsing
+	(Update 1): Created new method of parsing Content-Type headers. Just need to write the parsing function and it should be done!
+	(Update 2): It is splitting by boundaries, but only one file can be properly processed at a time it seems (at least when multiple files are send via cURL)
 - [Completed 2022.07.25] ~~Accept GET url args~~
 - [Completed 2022.08.21] ~~Implement a "base" action, where any request that doesn't match an existing action will redirect to the "base" action. See [Base Actions](#base-actions).
 	(Update 1): Having issues with getting the Method class to detect the base action~~
-- Implement dynamic action naming
-- Update ```conn.genericFailed()``` so the server doesn't return a 200 OK with it. Because it's a generic error the return status will probably just be a 500 Internal Server Error, but will still be customizable by the user
 
 ## Bugs
 - [False Positive 2022.08.17] ~~Sending a request with Content-Length header of 0 will crash the assigned thread~~ Requests with Content-Length of 0 will **not** be parsed because a 0 will be interpreted as boolean ```False```
