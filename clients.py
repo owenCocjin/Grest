@@ -81,23 +81,13 @@ class Client(threading.Thread):
 
 			#Process the request and get the calling action
 			try:
-				results=self.determineAction(req_headers,req_data)
-				#To add: Check if results is a tuple (status code,hint,data)
-				#If not, assume it's a good JSON dict
-
-				#Convert to JSON string if results is a dict
-				if type(results)==dict:
-					results=json.dumps(results)
+				results=self.determineAction(req_headers,req_data)  #This should return the conn.Reply + subclasses
 
 				print(f"[|X:clients:Client:action data]: {results}")
 
 				#Package the results (which should be a JSON string) into a proper HTTP message and send it off
 				#To add: if results is a failure, it should NOT return a 200 OK
-				self.cli.send(f"""{globe.HTTP_VERSION} 200 OK\r
-Content-Type: application/json\r
-Content-Length: {len(results)}\r
-\r
-{results}""".encode())
+				self.cli.send(results.bytes())
 
 			except APIError as e:
 				print(f"[|X:clients:Client:{e.__class__.__name__}]: {e}")
@@ -174,13 +164,3 @@ Content-Length: {len(results)}\r
 
 		#Done parsing, execute the action and return it's data!
 		return req_app_obj[req_method][req_action](request_headers,request_data,url_args)
-
-
-	#__--++* OKs *++--__#
-	def send_genericOK(self):
-		'''Return a generic OK message'''
-		self.cli.send(f"""{globe.HTTP_VERSION} 200 OK\r
-Content-Type: application/json\r
-Content-Length: 44\r\n\r
-{{"status":"OK","message":"Everything is OK"}}""".encode())
-		self.cli.close()
