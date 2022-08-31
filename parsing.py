@@ -125,10 +125,12 @@ class MIMESubtype():
 	def __init__(self,name,processing_func,takes_args=False):
 		'''name is the subtype name.
 		processing_func is the function that processes the data of this subtype.
-		takes_args if True, will allow the client to pass the Content-Type params (as a dict) to self.processing_func'''
+		takes_args if True, will allow the client to pass the Content-Type params (as a dict) to self.processing_func.
+		This is specifically useful for multipart MIME types because they will pass extra params within the Content-Type header itself'''
 		self.name=name
 		self.processing_func=processing_func
 		self.takes_args=takes_args
+
 	def __call__(self,*args,**kwargs):
 		return self.processing_func(*args,**kwargs)
 
