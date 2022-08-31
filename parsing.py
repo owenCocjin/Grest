@@ -1,7 +1,6 @@
 ## This file holds everything related to parsing data
 import re,sqlite3,base64,json,random
 import globe
-from conn import genericOK,genericFailed
 
 content_type={}  #This will be a dict of {content-type header val: func}
 
@@ -219,9 +218,9 @@ def generateRandomHexName(name):
 	return generateRandomName(name,hex=True)
 
 
-	#-----------------------#
-	#    Name Generation    #
-	#-----------------------#
+#-----------------------#
+#    Name Generation    #
+#-----------------------#
 name_generation['*']=generateRandomName
 name_generation['&']=generateRandomHexName
 

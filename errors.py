@@ -45,6 +45,9 @@ class AppDoesntExistError(APIError):
 class BadContentLengthError(APIError):
 	def __init__(self,message="Bad Content-Length given in header"):
 		APIError.__init__(self,message=message,code=400,hint="Bad Request",response="Bad Content-Length given in header")
+class BadContentTypeError(APIError):
+	def __init__(self,message="Bad/Unrecognized Content-Type header given"):
+		APIError.__init__(self,message=message,code=400,hint="Bad Request",response="A bad or unrecognized MIME type was passed in the Content-Type header")
 class ClientTimeoutError(APIError):
 	def __init__(self,message="Client timedout"):
 		APIError.__init__(self,message=message,code=408,hint="Request Timeout",response="Server was waiting too long",extra="The client most likely took too long to send it's full message")

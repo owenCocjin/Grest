@@ -73,11 +73,19 @@ class Client(threading.Thread):
 			#If there's a "content-type" header we will parse req_data as specified in the header
 			try:
 				content_type=parsing.getFromDict_nocase("content-type",req_headers)
+
+				#Split the given MIME by '/' and look for errors
+				mime_type,mime_subtype=content_type.decode().split('/')
+				print(f"[|X:clients:Client:mime_type]:    {mime_type}")
+				print(f"[|X:clients:Client:mime_subtype]: {mime_subtype}")
+
 				if content_type:
-					req_data=parsing.content_type[content_type.decode()](req_data)
+					req_data=parsing.content_type[mime_type][mime_subtype](req_data)
 			except Exception as e:
 				print(f"[|X:clients:Client]: Failed to parse the data with given content type: {e}")
-				pass
+				e=BadContentTypeError()
+				e.closeCli(self.cli)
+				continue
 
 			#Process the request and get the calling action
 			try:
