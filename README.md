@@ -2,6 +2,7 @@
 > A simple framework for implementing a small REST API server
 
 ## Directory
+- [Installation](#installation)
 - [Request Requirements](#request-requirements)
 	- [Request Path Requirements](#request-path-requirements)
 	- [Form Data](#form-data)
@@ -17,12 +18,28 @@
 	- [Action Returns](#action-returns)
 	- [Base Actions](#base-actions)
 	- [App Isolation](#app-isolation)
+	- [Installing To Docker](#installing-to-docker)
 - [Configurable Items](#configurable-items)
 	- [Globe](#globe)
 	- [Disabling Apps, Methods, and Actions](#disabling-apps-methods-and-actions)
 	- [Redirecting Actions](#redirecting-actions)
+	- [Docker Modifications](#docker-modifications)
 - [To-Do](#to-do)
 - [Bugs](#bugs)
+
+---
+
+## Installation
+## Straight
+This server runs straight from the directory; There is no installation
+
+## Docker
+You can build a Docker image using the provided ```Dockerfile```. Below are some instructions on building:
+
+1. From within the repo directory: ```docker build -t grest_image .```
+2. ```docker run -dp 8080:8080 --name grest_server grest_image```
+> Note: The default port is 8080. This can be changed via the "SERV_PORT" var. See [Configurable Items](#configurable-items).
+3. An instance should be running now! To run from a container: ```docker start grest_server```
 
 ---
 
@@ -178,6 +195,11 @@ Apps are not isolated from one another. It is not explicitly simple to interact 
 
 For example, the Info/apps app returns a list of all loaded apps and their actions. This is done by iterating through globe.ALL_APPS. We can simply import globe as we would normally (i.e. we don't need something like ```import ..globe```)
 
+### Installing To Docker
+If you've created a docker container and want to add new Apps, you don't need to rebuild the image. You can simply copy the new Apps right into the container (assuming they are under a local dir named ```Apps```:
+```docker cp ./Apps/. <container name>:/opt/Grest/Apps```
+> Note: The trailing ```/.``` after the source is CRITICAL! This tells Docker that we want to copy all contents
+
 ---
 
 ## Configurable Items
@@ -241,6 +263,9 @@ There are 5 options to redirection naming:
 		- Does not change the name of the original action, just points a new name to it
 
 Check out the example in the "Info" app: ```Apps/Info/GET/redirect```
+
+### Docker Modifications
+When running the server as-is, you can simply edit the ```globe.py``` file. You can do the same for the docker container if you change the configs before building the image. If you've already built the image but need to change things, you can run the following to edit the config file: ```docker exec -u 0 -it grest_demo /bin/nano globe.py```
 
 ---
 
