@@ -1,4 +1,7 @@
 ## This file holds all app related info
+## Update:
+##  - Used to use "str.strip()" to remove ".py" suffix, but this strips any of those 3 chars.
+##    Update just removes last 3 chars because at that point the file name has already been confirmed to end in ".py"
 import os
 import globe,parsing
 
@@ -78,7 +81,7 @@ class Method():
 			action in self.disabled_actions:
 				continue
 
-			action=action.strip(".py")
+			action=action[:-3]  #Strip the suffix
 			self.actions[action]=__import__(f"Apps.{self.app_name}.{self.method}.{action}",fromlist=("action")).action
 
 		#If there is a redirect file, read it in and parse through the redirects.
