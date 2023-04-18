@@ -48,7 +48,7 @@ class Client(threading.Thread):
 
 			try:
 				req_headers=parsing.httpHeaders(recv_data)
-				req_data=None  #clear here, somewhat arbitrary placement
+				req_data=None  #Clear here, somewhat arbitrary placement
 			except HTTPParsingError as e:
 				print(f"[|X]:clients:Client:error]: {e}")
 				e.closeCli(self.cli)
@@ -58,7 +58,7 @@ class Client(threading.Thread):
 			bytes_to_pull=parsing.getFromDict_nocase("content-length",req_headers)
 			if bytes_to_pull:
 				try:
-					req_data=self.cli.recv(int(bytes_to_pull.decode()))
+					req_data=self.cli.recv(int(bytes_to_pull))
 				except TimeoutError as e:
 					print(f"[|X:clients:Client]: {e}")
 					e=ClientTimeoutError()
@@ -74,7 +74,7 @@ class Client(threading.Thread):
 			try:
 				content_type=parsing.getFromDict_nocase("content-type",req_headers)
 				if content_type:
-					req_data=parsing.content_type[content_type.decode()](req_data)
+					req_data=parsing.content_type[content_type](req_data)
 			except Exception as e:
 				print(f"[|X:clients:Client]: Failed to parse the data with given content type: {e}")
 				pass

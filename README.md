@@ -283,3 +283,4 @@ When running the server as-is, you can simply edit the ```globe.py``` file. You 
 
 ## Bugs
 - [False Positive 2022.08.17] ~~Sending a request with Content-Length header of 0 will crash the assigned thread~~ Requests with Content-Length of 0 will **not** be parsed because a 0 will be interpreted as boolean ```False```
+- [-] Server doesn't obey ```globe.CLI_TIMEOUT``` if using TLS

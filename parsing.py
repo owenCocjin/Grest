@@ -73,7 +73,14 @@ def httpHeaders(req):
 	#Go through the rest of the header and create a dict using the headers
 	for h in req[1:]:
 		delim=h.find(b':')
-		to_ret_dict[h[:delim].decode().strip()]=h[delim+1:].strip()
+		#Skip if delim is -1 (doesn't exist)
+		if delim<=0:
+			continue
+		
+		try:
+			to_ret_dict[(cur_header:=h[:delim].decode().strip())]=h[delim+1:].strip().decode()
+		except UnicodeDecodeError as e:
+			raise HTTPParsingError(f"Received undecodable header: {cur_header}")
 
 	return to_ret_dict
 

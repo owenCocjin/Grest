@@ -69,6 +69,13 @@ class Ok(Reply):
 		self.headers=["Content-Type: application/json"] if not headers else headers
 		Reply.__init__(self,self.data,self.headers,status_code,hint)
 
+	# def JSONResponse(self,response="Good",**kwargs):
+	# 	'''Convert from response to JSON. Returns a Failed object'''
+	# 	self.converter=lambda d:json.dumps(d).encode()
+	# 	self.data={"status":"Failed","response":response}
+	# 	if kwargs:
+	# 		self.data.update(kwargs)
+
 class Failed(Reply):
 	'''This is a default Failed reply'''
 	@classmethod
@@ -83,6 +90,17 @@ class Failed(Reply):
 		self.data={"status":"Failed","response":"Bad"} if not data else data
 		self.headers=["Content-Type: application/json"] if not headers else headers
 		Reply.__init__(self,self.data,self.headers,status_code,hint)
+
+	# def JSONResponse(self,response="Bad",**kwargs):
+	# 	'''Convert from response to JSON. Returns a Failed object'''
+	# 	self.converter=lambda d:json.dumps(d).encode()
+	# 	self.data={"status":"Failed","response":response}
+	# 	if kwargs:
+	# 		self.data.update(kwargs)
+
+		print(f"[|x:reply:Failed:JSONResponse:data]: {self.data}")
+		return self
+
 
 
 
