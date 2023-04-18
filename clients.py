@@ -99,7 +99,7 @@ class Client(threading.Thread):
 	def determineAction(self,request_headers,request_data):
 		'''Determine what to do based on the type of request and the request path'''
 		print(f"[|X:clients:Client:determineAction]: {request_headers['req_path']}")
-		if request_headers["req_path"][:5]!="/api/":
+		if not request_headers["req_path"].startswith(f"/{globe.API_PATH_TITLE}/"):
 			raise APIPathError
 
 		#Get the name of the requested app

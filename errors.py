@@ -35,7 +35,7 @@ Content-Length: {len(payload)}\r
 #Alphabetic order
 class APIPathError(APIError):
 	def __init__(self,message="Bad path given"):
-		APIError.__init__(self,message=message,code=400,hint="Bad Request",response="Client sent a bad API request",extra="Ensure the requested path follows: 'http://url:port/api/target_app/target_action'")
+		APIError.__init__(self,message=message,code=400,hint="Bad Request",response="Client sent a bad API request",extra=f"Ensure the requested path follows: 'http://url:port/{globe.API_PATH_TITLE}/target_app/target_action'")
 class ActionDoesntExistError(APIError):
 	def __init__(self,message="Requested action doesn't exist"):
 		APIError.__init__(self,message=message,code=404,hint="Not Found",response="Requested action doesn't exist",extra="This server is case sensitive. Make sure the requested action is in the correct case. Also check that the action exists under the requested method")
@@ -53,10 +53,10 @@ class HTTPParsingError(APIError):
 		APIError.__init__(self,message=message,code=500,hint="Internal Error",response="Failed to parse HTTP request")
 class MissingAppError(APIError):
 	def __init__(self,message="No app was given by client"):
-		APIError.__init__(self,message=message,code=404,hint="Not Found",response="No app was requested",extra="Ensure the requested path follows: 'http://url:port/api/target_app/target_action'")
+		APIError.__init__(self,message=message,code=404,hint="Not Found",response="No app was requested",extra=f"Ensure the requested path follows: 'http://url:port/{globe.API_PATH_TITLE}/target_app/target_action'")
 class MissingActionError(APIError):
 	def __init__(self,message="No action was given by client"):
-		APIError.__init__(self,message=message,code=404,hint="Not Found",response="No action was requested",extra="Ensure the requested path follows: 'http://url:port/api/target_app/target_action'")
+		APIError.__init__(self,message=message,code=404,hint="Not Found",response="No action was requested",extra=f"Ensure the requested path follows: 'http://url:port/{globe.API_PATH_TITLE}/target_app/target_action'")
 class RequestMethodError(APIError):
 	def __init__(self,message="Invalid/unsupported request method given"):
 		APIError.__init__(self,message=message,code=501,hint="Not Implemented",response="Request method not supported")

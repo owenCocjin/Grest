@@ -45,7 +45,7 @@ You can build a Docker image using the provided ```Dockerfile```. Below are some
 
 ## Request Requirements
 ### Request Path Requirements
-Because this is a REST API server, it's meant to take requests as such. The uses of request methods such as "GET", "POST", etc... Should all be used as expected (this really just comes down to how you write your apps). The most important thing to note is that the request path is **case sensitive** and follows the following syntax: ```/api/app/action```
+Because this is a REST API server, it's meant to take requests as such. The uses of request methods such as "GET", "POST", etc... Should all be used as expected (this really just comes down to how you write your apps). The most important thing to note is that the request path is **case sensitive** and follows the following syntax: ```/{globe.API_PATH_TITLE}/app/action```
 
 > - "api" is constant and required
 > - "app" is the name of the requested app
@@ -211,7 +211,8 @@ The ```globe.py``` file holds all configurable items. Think of it as a config fi
 	- **SERV_TIMEOUT** _(int)_: The seconds the server will stay connected to the client
 	- **CLI_TIMEOUT** _(int)_: The seconds the server will wait for the client
 	- **CLI_BLOCKING** _(bool)_: Boolean to determine if the client sockets are blocking or not (True is blocking)
-	- **THREAD_COUNT** _(int)_: The number of listener threads to run at once. This equates to the number of simultaneous connections.
+	- **THREAD_COUNT** _(int)_: The number of listener threads to run at once. This equates to the number of simultaneous connections
+	- **API_PATH_TITLE** _(str)_: The name of the API in the url. Default example: ```https://localhost:8080/**api**/Time/now```
 - clients.py
 	- **SUPPORTED_METHODS** _(list of strs)_: A list of all supported request methods. Essentially a list of allowable method directory names (see [App Structures](#app-structures))
 - TLS

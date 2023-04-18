@@ -9,11 +9,12 @@ SERV_IP="0.0.0.0"
 SERV_PORT=8080
 
 #Not as important!
-# SERV_TIMEOUT=60  #Seconds
-SERV_TIMEOUT=60  #Seconds
+SERV_TIMEOUT=5  #Seconds
 CLI_TIMEOUT=1  #Seconds
 CLI_BLOCKING=True
 THREAD_COUNT=5
+
+API_PATH_TITLE="api"
 
 '''----------------#
 #    clients.py    #
