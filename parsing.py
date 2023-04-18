@@ -1,6 +1,7 @@
 ## This file holds everything related to parsing data
 import re,sqlite3,base64,json,random
 import globe,reply
+from errors import *
 
 content_type={}  #This will be a dict of {content-type header val: func}
 
@@ -61,7 +62,7 @@ def httpHeaders(req):
 
 	if not re.fullmatch(f"({'|'.join(globe.SUPPORTED_METHODS)})\s(/.*)+\sHTTP/1.[1-2]",req[0]):
 		print(f"[|X:parsing:httpRequest]: Received bad HTTP request header")
-		raise globe.HTTPParsingError("Received bad/unsupported HTTP request (header)")
+		raise HTTPParsingError("Received bad/unsupported HTTP request (header)")
 
 	#Separate request type, path, and version
 	reqheader=req[0].split(' ')
