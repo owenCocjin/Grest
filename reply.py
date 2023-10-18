@@ -98,11 +98,12 @@ class Failed(Reply):
 	# 	if kwargs:
 	# 		self.data.update(kwargs)
 
-		print(f"[|x:reply:Failed:JSONResponse:data]: {self.data}")
-		return self
+		# print(f"[|x:reply:Failed:JSONResponse:data]: {self.data}")
+		# return self
 
 
 
 
 if __name__=="__main__":
 	print(Ok.JSONResponse("Good job!"))
+	print(Failed.JSONResponse("Bad job!"))

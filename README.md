@@ -244,21 +244,25 @@ orig_action -> new_action
 There are 5 options to redirection naming:
 	- Static: Just using a name that will not change
 		- Takes a valid URL compliant string
+
 	- **[NOT IMPLEMENTED]** Dynamic: Change the name each time it is requested
 		- Takes ```?``` followed by either "random" or "hex random" characters
 		- Remaining specifications follow "random" or "hex random" as detailed below
+
 	- Random: The server generates a random action name
 		- Takes ```*``` as the new name
 		- Uses charset: ```a-zA-Z0-9_```
 		- Adding a number directly after the ```*``` will specify the length
 		- Adding two numbers separated by a dash will specify a random range (inclusive)
 		- Default length is 16-32 chars long, randomly chosen by server
+
 	- Hex Random: The server generates a random action name (same as "Random"), but uses only lowercase hex chars
 		- Takes ```&``` as the new name
 		- Uses charset: ```a-f0-9```
 		- Adding a number directly after the ```*``` will specify the length
 		- Adding two numbers separated by a dash will specify a random range (inclusive)
 		- Default length is 16-32 chars long, randomly chosen by server
+		
 	- Aliasing: Point a static non-existent name to an existing action
 		- Takes a valid URL compliant string
 		- Does not change the name of the original action, just points a new name to it
@@ -284,3 +288,4 @@ When running the server as-is, you can simply edit the ```globe.py``` file. You 
 ## Bugs
 - [False Positive 2022.08.17] ~~Sending a request with Content-Length header of 0 will crash the assigned thread~~ Requests with Content-Length of 0 will **not** be parsed because a 0 will be interpreted as boolean ```False```
 - [-] Server doesn't obey ```globe.CLI_TIMEOUT``` if using TLS
+- [Fixed 2023.10.18] ~~The `reply.Failed.JSONResponse()` function causes an error~~ The function was returning the `Failed` object, when the class was expecting `None`
