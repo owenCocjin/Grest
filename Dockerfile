@@ -1,5 +1,5 @@
 FROM debian:latest
-RUN mkdir /opt/Grest && apt-get -y update && apt-get -y upgrade && apt-get -y install python3 nano
+RUN mkdir /opt/Grest && apt-get -y update && apt-get -y upgrade && apt-get -y install python3 python3-pip nano
 WORKDIR /opt/Grest
 COPY . /opt/Grest
 CMD ["python3","/opt/Grest/main.py"]
