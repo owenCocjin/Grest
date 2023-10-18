@@ -242,30 +242,30 @@ orig_action -> new_action
 ```
 
 There are 5 options to redirection naming:
-	- Static: Just using a name that will not change
-		- Takes a valid URL compliant string
+- Static: Just using a name that will not change
+	- Takes a valid URL compliant string
 
-	- **[NOT IMPLEMENTED]** Dynamic: Change the name each time it is requested
-		- Takes ```?``` followed by either "random" or "hex random" characters
-		- Remaining specifications follow "random" or "hex random" as detailed below
+- **[NOT IMPLEMENTED]** Dynamic: Change the name each time it is requested
+	- Takes ```?``` followed by either "random" or "hex random" characters
+	- Remaining specifications follow "random" or "hex random" as detailed below
 
-	- Random: The server generates a random action name
-		- Takes ```*``` as the new name
-		- Uses charset: ```a-zA-Z0-9_```
-		- Adding a number directly after the ```*``` will specify the length
-		- Adding two numbers separated by a dash will specify a random range (inclusive)
-		- Default length is 16-32 chars long, randomly chosen by server
+- Random: The server generates a random action name
+	- Takes ```*``` as the new name
+	- Uses charset: ```a-zA-Z0-9_```
+	- Adding a number directly after the ```*``` will specify the length
+	- Adding two numbers separated by a dash will specify a random range (inclusive)
+	- Default length is 16-32 chars long, randomly chosen by server
 
-	- Hex Random: The server generates a random action name (same as "Random"), but uses only lowercase hex chars
-		- Takes ```&``` as the new name
-		- Uses charset: ```a-f0-9```
-		- Adding a number directly after the ```*``` will specify the length
-		- Adding two numbers separated by a dash will specify a random range (inclusive)
-		- Default length is 16-32 chars long, randomly chosen by server
-		
-	- Aliasing: Point a static non-existent name to an existing action
-		- Takes a valid URL compliant string
-		- Does not change the name of the original action, just points a new name to it
+- Hex Random: The server generates a random action name (same as "Random"), but uses only lowercase hex chars
+	- Takes ```&``` as the new name
+	- Uses charset: ```a-f0-9```
+	- Adding a number directly after the ```*``` will specify the length
+	- Adding two numbers separated by a dash will specify a random range (inclusive)
+	- Default length is 16-32 chars long, randomly chosen by server
+	
+- Aliasing: Point a static non-existent name to an existing action
+	- Takes a valid URL compliant string
+	- Does not change the name of the original action, just points a new name to it
 
 Check out the example in the "Info" app: ```Apps/Info/GET/redirect```
 
